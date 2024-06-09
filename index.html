@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Змеиный Кликер для Telegram</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .score {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .snake {
+            font-size: 48px;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        .snake img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.2s;
+        }
+        .eyes-open {
+            opacity: 1;
+        }
+        .eyes-closed {
+            opacity: 0;
+        }
+        .menu {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .button:disabled {
+            background-color: #9E9E9E;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="score">Очки: <span id="score">0</span></div>
+    <div class="snake" onclick="incrementScore()">
+        <img src="snake-eyes-open.png" alt="Змея с открытыми глазами" class="eyes-open">
+        <img src="snake-eyes-closed.png" alt="Змея с закрытыми глазами" class="eyes-closed">
+    </div>
+    <div class="menu">
+        <button class="button" id="boostButton" onclick="buyBoost()">Boost (10 очков)</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let pointsPerClick = 1;
+        const scoreElement = document.getElementById('score');
+        const boostButton = document.getElementById('boostButton');
+        const eyesOpen = document.querySelector('.eyes-open');
+        const eyesClosed = document.querySelector('.eyes-closed');
+
+        function incrementScore() {
+            score += pointsPerClick;
+            updateScore();
+            animateSnake();
+        }
+
+        function updateScore() {
+            scoreElement.textContent = score;
+            boostButton.disabled = score < 10;
+        }
+
+        function buyBoost() {
+            if (score >= 10) {
+                score -= 10;
+                pointsPerClick = 2;
+                updateScore();
+                boostButton.disabled = true;
+                boostButton.textContent = 'Boost (куплен)';
+            }
+        }
+
+        function animateSnake() {
+            eyesOpen.style.opacity = 0;
+            eyesClosed.style.opacity = 1;
+            setTimeout(() => {
+                eyesOpen.style.opacity = 1;
+                eyesClosed.style.opacity = 0;
+            }, 200); // Длительность анимации закрытия глаз 200 мс
+        }
+    </script>
+</body>
+</html>
